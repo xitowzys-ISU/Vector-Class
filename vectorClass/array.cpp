@@ -8,22 +8,24 @@
 #include "array.hpp"
 
 // Конструктор
-Array::Array(int startCapacity)
+template <class Type>
+Array<Type>::Array(int startCapacity)
 {
     if (startCapacity <= 0)
         this->capacity = this->DEFAULT_CAPACITY;
     else
         this->capacity = startCapacity;
 
-    this->ptr = new int[this->capacity];
+    this->ptr = new Type[this->capacity];
 
     this->size = 0;
 }
 
 // Конструктор копирования
-Array::Array(const Array& arr)
+template <class Type>
+Array<Type>::Array(const Array<Type>& arr)
 {
-    this->ptr = new int(arr.capacity);
+    this->ptr = new Type(arr.capacity);
 
     this->size = arr.size;
 
@@ -34,7 +36,8 @@ Array::Array(const Array& arr)
 }
 
 // Деструктор
-Array::~Array()
+template <class Type>
+Array<Type>::~Array()
 {
     delete[] this->ptr;
 
@@ -42,12 +45,14 @@ Array::~Array()
 }
 
 // Вставка элемента
-void Array::insert(int elem)
+template <class Type>
+void Array<Type>::insert(Type elem)
 {
     insert(elem, this->size);
 }
 
-void Array::insert(int elem, int index)
+template <class Type>
+void Array<Type>::insert(Type elem, int index)
 {
     if (index > this->size || index < 0)
         throw ArrayException();
@@ -64,7 +69,8 @@ void Array::insert(int elem, int index)
 }
 
 //Удаление элемента
-void Array::remove(int index) {
+template <class Type>
+void Array<Type>::remove(int index) {
     if (index < 0 || index >= size)
         throw ArrayException();
     
@@ -75,8 +81,8 @@ void Array::remove(int index) {
     size--;
 }
 
-
-Array& Array::operator = (const Array& arr)
+template <class Type>
+Array<Type>& Array<Type>::operator = (const Array<Type>& arr)
 {
     if (this == &arr)
         return *this;
@@ -84,7 +90,7 @@ Array& Array::operator = (const Array& arr)
     if (this->capacity != arr.capacity)
     {
         delete[] this->ptr;
-        this->ptr = new int[arr.capacity];
+        this->ptr = new Type[arr.capacity];
         this->capacity = arr.capacity;
     }
 
@@ -96,7 +102,8 @@ Array& Array::operator = (const Array& arr)
     return *this;
 }
 
-int& Array::operator[] (int index)
+template <class Type>
+Type& Array<Type>::operator[] (int index)
 {
     if (index == size)
         size++;
@@ -110,13 +117,15 @@ int& Array::operator[] (int index)
         return this->ptr[index];
 }
 
-int Array::getSize() const
+template <class Type>
+int Array<Type>::getSize() const
 {
     return size;
 }
 
 // Вывод вектора
-std::ostream& operator << (std::ostream& out, const Array& arr)
+template <class Type>
+std::ostream& operator << (std::ostream& out, const Array<Type>& arr)
 {
     out << "Размер вектора: " << arr.size << std::endl;
     
@@ -126,11 +135,12 @@ std::ostream& operator << (std::ostream& out, const Array& arr)
     return out;
 }
 
-void Array::increaseCapacity(int newCapacity)
+template <class Type>
+void Array<Type>::increaseCapacity(int newCapacity)
 {
     this->capacity = newCapacity < this->capacity*2 ? this->capacity*2 : newCapacity;
 
-    int* newPtr = new int[this->capacity];
+    Type* newPtr = new Type[this->capacity];
 
     for(int i = 0; i < size; i++)
         newPtr[i] = this->ptr[i];
